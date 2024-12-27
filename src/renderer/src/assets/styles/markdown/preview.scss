@@ -1,0 +1,31 @@
+.md-page-toc {
+  position: fixed;
+  top: 30%;
+  right: 100px;
+  transform: translateY(-50%);
+  padding: 20px;
+  background: #fafafa;
+
+  .md-page-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .md-page-link {
+    color: black;
+  }
+
+  .md-page-link-h1 {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .md-page-link-h2 {
+    font-size: 14px;
+    padding-left: 14px;
+    font-weight: 500;
+  }
+  .md-page-list-item {
+    user-select: none;
+  }
+}
