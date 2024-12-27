@@ -30,14 +30,18 @@ export const transformedDirTreeInfo = (nodes: IFileNode[]): TreeDataNode[] => {
 
 export function DirTree({
   dirTreeInfo,
-  onSelect
+  onSelect,
+  height = 650
 }: {
   dirTreeInfo: TreeDataNode[]
 
   onSelect?: TreeProps['onSelect']
+
+  height?: number
 }): JSX.Element {
   return (
     <>
+      {height}
       {dirTreeInfo && (
         <ConfigProvider
           theme={{
@@ -56,6 +60,7 @@ export function DirTree({
             showIcon={false}
             treeData={dirTreeInfo}
             defaultExpandAll={true}
+            height={height}
             titleRender={(node) => {
               const title = typeof node.title === 'function' ? node.title(node) : node.title
               const icon = node.icon

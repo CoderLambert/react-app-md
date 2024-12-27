@@ -3,13 +3,16 @@ import fsPromises from 'fs/promises'
 
 import * as path from 'path'
 import * as fs from 'fs'
+import fg from 'fast-glob'
+
 import { IFileNode } from '@common/types/md'
+
 export interface IGetAllDirOptions {
   excludeHidden?: boolean // 是否排除隐藏文件夹和文件
-  excludeFileTypes?: string[] // 需要排除的文件类型（扩展名）
+  // excludeFileTypes?: string[] // 需要排除的文件类型（扩展名）
   includeFileTypes?: string[] // 需要包含的文件类型（扩展名）
-  excludeDirectories?: string[] // 需要排除的目录名
-  level: number | null
+  // excludeDirectories?: string[] // 需要排除的目录名
+  // level: number | null
 }
 
 export class FileSystem {
@@ -111,27 +114,31 @@ export class FileSystem {
   // 以树形结构获取所有文件
 
   static getAllDirFiles(dir: string, options: IGetAllDirOptions): IFileNode[] {
-    const { excludeHidden, excludeFileTypes, includeFileTypes, excludeDirectories } = options
+    // const { excludeHidden, excludeFileTypes, includeFileTypes, excludeDirectories } = options
+    const { excludeHidden, includeFileTypes } = options
+
     const filesNameArr: IFileNode[] = []
     const mapDeep: { [key: string]: number } = { [dir]: 0 }
     console.log('options:', options)
     // 判断是否为隐藏文件或文件夹
     const isHidden = (file: string): boolean => file.startsWith('.')
 
-    // 判断是否需要排除文件类型
-    const shouldExcludeFileType = (file: string): boolean =>
-      excludeFileTypes ? excludeFileTypes.includes(path.extname(file)) : false
-
     // 判断是否需要包含文件类型
-    const shouldIncludeFileType = (file: string): boolean =>
-      includeFileTypes
-        ? includeFileTypes.length === 0 || !includeFileTypes.includes(path.extname(file))
-        : true
+    const shouldIncludeFileType = (file: string): boolean => {
+      const ext = path.extname(file)
 
-    // 判断是否需要排除目录
-    const shouldExcludeDirectory = (file: string): boolean =>
-      excludeDirectories ? excludeDirectories.includes(file) : false
+      return includeFileTypes?.includes(ext) || false
+    }
 
+    // 使用 fast-glob 递归获取所有文件和目录
+    // const files = fg.sync([`${dir}/**/*.md`], {
+    //   dot: !excludeHidden, // 是否包含隐藏文件
+    //   onlyFiles: false, // 包含文件和目录
+    //   absolute: true, // 返回绝对路径
+    //   stats: true // 获取文件状态信息
+    // })
+
+    // console.log('glob files:', files)
     // 递归读取目录结构
     const readDirs = (currentDir: string, folderName: string): IFileNode => {
       const result: IFileNode = {
@@ -144,20 +151,19 @@ export class FileSystem {
       }
 
       const files = fs.readdirSync(currentDir)
-      files.forEach((file) => {
-        // console.log('file:', file)
 
+      files.forEach((file) => {
         if (excludeHidden && isHidden(file)) return // 排除隐藏文件或文件夹
-        if (shouldExcludeDirectory(file)) return // 排除指定目录
 
         const subPath = path.join(currentDir, file)
         const stats = fs.statSync(subPath)
 
         if (stats.isDirectory()) {
-          result.children?.push(readDirs(subPath, file))
-        } else {
-          if (shouldExcludeFileType(file)) return // 排除指定文件类型
-          if (!shouldIncludeFileType(file)) return // 不包含指定文件类型
+          const subDir = readDirs(subPath, folderName)
+          if (subDir?.children && subDir.children.length > 0) {
+            result.children!.push(subDir)
+          }
+        } else if (shouldIncludeFileType(file)) {
           result.children?.push({
             path: subPath,
             name: file,

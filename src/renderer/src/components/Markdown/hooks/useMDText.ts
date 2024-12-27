@@ -3,25 +3,29 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import remarkMath from 'remark-math'
 import remarkGfm from 'remark-gfm'
+
+import remarkGithub from 'remark-github'
+
 import rehypeMermaid from 'rehype-mermaid'
 
 import rehypeKatex from 'rehype-katex'
 import rehypeStringify from 'rehype-stringify'
-// import rehypeShiki from '@shikijs/rehype'
-import rehypeImageAbsolutePath from './rehype-img-links-path.js'
 import rehypeSlug from 'rehype-slug'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypePrettyCode from 'rehype-pretty-code'
 import { transformerCopyButton } from '@rehype-pretty/transformers'
-import {
-  transformerNotationDiff,
-  transformerNotationHighlight,
-  transformerNotationWordHighlight,
-  transformerNotationFocus,
-  transformerNotationErrorLevel
-} from '@shikijs/transformers'
+// import {
+//   transformerNotationDiff,
+//   transformerNotationHighlight,
+//   transformerNotationWordHighlight,
+//   transformerNotationFocus,
+//   transformerNotationErrorLevel
+// } from '@shikijs/transformers'
 
 import { VFile } from 'remark-github/lib'
+
+import rehypeImageAbsolutePath from '@renderer/plugins/rehype-img-links-path'
+import rehypeMediumZoom from '@renderer/plugins/rehype-medium-zoom'
 
 const cache = new Map<string, Promise<VFile>>()
 
@@ -35,11 +39,15 @@ export function useBuildFile(mdText: string, options: { baseDir: string }): Prom
   const processor = unified()
     .use(remarkParse)
     .use(remarkGfm)
+    .use(remarkGithub, {
+      repository: 'user/project'
+    })
     .use(remarkMath)
     .use(remarkRehype)
     .use(rehypeImageAbsolutePath, { absolutePath: options.baseDir })
     .use(rehypeSlug)
     .use(rehypeKatex)
+    .use(rehypeMediumZoom)
     // 必须要放在 rehypeShiki\rehypePrettyCode 之前，否则会被因为之前插件渲染导致无法正确解析
     .use(rehypeMermaid)
     .use(rehypePrettyCode, {
@@ -55,7 +63,7 @@ export function useBuildFile(mdText: string, options: { baseDir: string }): Prom
         // transformerNotationHighlight(),
         // transformerNotationWordHighlight(),
         // transformerNotationFocus(),
-        transformerNotationErrorLevel(),
+        // transformerNotationErrorLevel(),
 
         transformerCopyButton({
           visibility: 'always',
@@ -65,6 +73,7 @@ export function useBuildFile(mdText: string, options: { baseDir: string }): Prom
     })
 
     .use(rehypeAutolinkHeadings)
+
     .use(rehypeStringify)
 
   const promise = processor.process(mdText)

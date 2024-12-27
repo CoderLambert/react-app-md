@@ -1,18 +1,16 @@
-function normalizePath(path) {
+function normalizePath(path): string {
   return path.replace(/\\/g, '/')
 }
 
-function isAbsolutePath(path) {
+function isAbsolutePath(path): boolean {
   path = normalizePath(path)
   return path.startsWith('//') || path.startsWith('/') || (path.length >= 2 && path[1] === ':')
 }
 
-function resolvePath(basePath, relativePath) {
+function resolvePath(basePath, relativePath): string {
   // Normalize path separators
   basePath = normalizePath(basePath)
   relativePath = normalizePath(relativePath)
-  console.log('relativePath:', relativePath)
-  console.log('basePath ==>', basePath)
   // Check if relativePath is absolute
   if (isAbsolutePath(relativePath)) {
     // If relativePath has a drive letter or is UNC, return it as is
@@ -58,14 +56,14 @@ function resolvePath(basePath, relativePath) {
   }
 
   // Split relative path into parts
-  let relativeParts = relativePath.split('/').filter((part) => part !== '')
+  const relativeParts = relativePath.split('/').filter((part) => part !== '')
 
   // Combine the parts
-  let combinedParts = baseParts.concat(relativeParts)
+  const combinedParts = baseParts.concat(relativeParts)
 
   // Resolve '..' and '.'
-  let resolvedParts = []
-  for (let part of combinedParts) {
+  const resolvedParts = []
+  for (const part of combinedParts) {
     if (part === '.') {
       // Current directory, ignore
     } else if (part === '..') {
@@ -91,4 +89,4 @@ function resolvePath(basePath, relativePath) {
   return resolvedPath
 }
 
-export { resolvePath }
+export { resolvePath, isAbsolutePath, normalizePath }

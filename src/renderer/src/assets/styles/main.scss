@@ -7,6 +7,7 @@
 @import url('./layouts/dashboard.scss');
 /* ... */
 @import url('./prettyCode/code-custom.css');
+
 html,
 body {
   height: 100%;
@@ -20,4 +21,15 @@ body {
 
 .max-w-clamp {
   width: clamp(90%, 1200px, 100%);
+}
+
+.medium-zoom-overlay {
+  z-index: 998;
+}
+
+.medium-zoom-image {
+  height: auto;
+}
+.medium-zoom-image--opened {
+  z-index: 9999;
 }

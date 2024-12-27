@@ -2,6 +2,10 @@ import 'katex/dist/katex.css'
 import 'github-markdown-css/github-markdown-light.css'
 import { useBuildFile } from './hooks/useMDText'
 import { useEffect, useState } from 'react'
+import '@renderer/assets/styles/markdown/preview.scss'
+import mediumZoom from 'medium-zoom'
+import { Zoom } from 'medium-zoom'
+import 'medium-zoom/dist/style.css'
 
 export default function MDViewer({
   mdRaw,
@@ -13,12 +17,29 @@ export default function MDViewer({
   const [file, setFile] = useState<string>('')
 
   useEffect(() => {
-    const fetchFile = async (): Promise<void> => {
-      const result = await useBuildFile(mdRaw, { baseDir: baseDir })
-      setFile(String(result))
+    const fetchAndSetFile = async (): Promise<void> => {
+      try {
+        const result = await useBuildFile(mdRaw, { baseDir })
+        setFile(String(result))
+      } catch (error) {
+        console.error('Failed to build file:', error)
+        setFile('') // 或者可以设置一个错误状态
+      }
     }
-    fetchFile()
+
+    fetchAndSetFile()
   }, [mdRaw, baseDir])
+
+  useEffect(() => {
+    const zoom = mediumZoom('[data-zoomable]', {
+      scrollOffset: 0,
+      background: 'rgba(4, 4, 4, .8)'
+    })
+    // 清理函数
+    return (): void => {
+      zoom.detach()
+    }
+  })
 
   if (!file) {
     return <div className="w-full flex justify-center items-center">Loading...</div>

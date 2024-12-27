@@ -9,7 +9,7 @@ import {
 
 import ResizeHandle from '@renderer/components/ResizeHandler'
 import type { TreeProps } from 'antd'
-import { transformedDirTreeInfo, DirTree } from './DirTree'
+import { transformedDirTreeInfo, DirTree } from '@renderer/components/Markdown/DirTree'
 import MDViewer from '@renderer/components/Markdown/Viewer'
 
 import { useMarkdownNoteStore } from '@renderer/store/useMarkdownNoteStore'
@@ -61,6 +61,15 @@ export function MarkdownPage(): JSX.Element {
     updateTreeDirInfo('D:/电子书/clean-arch/docs')
   }, [])
 
+  const treeBoxRef = useRef<HTMLDivElement>(null)
+  const [treeBoxHeight, setTreeBoxHeight] = useState(0)
+
+  useEffect(() => {
+    if (treeBoxRef.current) {
+      setTreeBoxHeight(treeBoxRef.current.offsetHeight)
+    }
+  }, []) // 空依赖数组表示只在组件挂载时执行
+
   async function openDir(): Promise<void> {
     const selectDir = await window.electron.ipcRenderer.invoke(
       'lz:open-dir-dialog',
@@ -74,7 +83,7 @@ export function MarkdownPage(): JSX.Element {
     setRootDirPath(selectDir)
     const res = await window.electron.ipcRenderer.invoke('lz:read-dir-with-ant-tree', selectDir, {
       excludeHidden: true,
-      includeFileTypes: ['md', 'jpg']
+      includeFileTypes: ['.md']
     })
     setDirTreeInfo(transformedDirTreeInfo(res))
   }
@@ -139,7 +148,8 @@ export function MarkdownPage(): JSX.Element {
 
               <div
                 style={{ height: 'calc(100% - 100px)' }}
-                className="m-6 scrollbar-none overflow-scroll "
+                className="m-6 scrollbar-none overflow-scroll"
+                ref={treeBoxRef}
               >
                 {dirTreeInfo.length > 0 && (
                   <DirTree onSelect={onTreeNodeSelect} dirTreeInfo={dirTreeInfo} />
