@@ -4,7 +4,6 @@ import { useBuildFile } from './hooks/useMDText'
 import { useEffect, useState } from 'react'
 import '@renderer/assets/styles/markdown/preview.scss'
 import mediumZoom from 'medium-zoom'
-import { Zoom } from 'medium-zoom'
 import 'medium-zoom/dist/style.css'
 
 export default function MDViewer({
@@ -28,6 +27,12 @@ export default function MDViewer({
     }
 
     fetchAndSetFile()
+
+    document.querySelector('.main-box')?.scroll({
+      left: 0,
+      top: 0,
+      behavior: 'smooth'
+    })
   }, [mdRaw, baseDir])
 
   useEffect(() => {
