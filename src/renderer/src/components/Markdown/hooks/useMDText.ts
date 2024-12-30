@@ -3,9 +3,10 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import remarkMath from 'remark-math'
 import remarkGfm from 'remark-gfm'
-
-import remarkGithub from 'remark-github'
-
+import gemoji from 'remark-gemoji'
+// import remarkGithub from 'remark-github'
+import remarkReferenceLinks from 'remark-reference-links'
+// import remarkTextr from 'remark-textr'
 import rehypeMermaid from 'rehype-mermaid'
 
 import rehypeKatex from 'rehype-katex'
@@ -39,12 +40,16 @@ export function useBuildFile(mdText: string, options: { baseDir: string }): Prom
   const processor = unified()
     .use(remarkParse)
     .use(remarkGfm)
-    .use(remarkGithub, {
-      repository: 'user/project'
-    })
+    // .use(remarkGithub, {
+    //   repository: 'user/project'
+    // })
     .use(remarkMath)
+    .use(gemoji)
     .use(remarkRehype)
+
+    // .use(remarkTextr)
     .use(rehypeImageAbsolutePath, { absolutePath: options.baseDir })
+    .use(remarkReferenceLinks)
     .use(rehypeSlug)
     .use(rehypeKatex)
     .use(rehypeMediumZoom)

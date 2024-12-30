@@ -59,16 +59,17 @@ export function MarkdownPage(): JSX.Element {
       resizeHandleElement
     }
     updateTreeDirInfo('D:/电子书/clean-arch/docs')
-  }, [])
-
-  const treeBoxRef = useRef<HTMLDivElement>(null)
-  const [treeBoxHeight, setTreeBoxHeight] = useState(0)
-
-  useEffect(() => {
     if (treeBoxRef.current) {
       setTreeBoxHeight(treeBoxRef.current.offsetHeight)
     }
-  }, []) // 空依赖数组表示只在组件挂载时执行
+  }, [])
+
+  const treeBoxRef = useRef<HTMLDivElement>(null)
+  const [, setTreeBoxHeight] = useState(0)
+
+  // useEffect(() => {
+
+  // }, []) // 空依赖数组表示只在组件挂载时执行
 
   async function openDir(): Promise<void> {
     const selectDir = await window.electron.ipcRenderer.invoke(
