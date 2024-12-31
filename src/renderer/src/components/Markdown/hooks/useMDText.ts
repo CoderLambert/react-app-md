@@ -1,4 +1,4 @@
-import { unified } from 'unified'
+import { PluggableList, unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import remarkMath from 'remark-math'
@@ -6,14 +6,17 @@ import remarkGfm from 'remark-gfm'
 import gemoji from 'remark-gemoji'
 // import remarkGithub from 'remark-github'
 import remarkReferenceLinks from 'remark-reference-links'
+import admonitions from 'remark-github-beta-blockquote-admonitions'
+
 // import remarkTextr from 'remark-textr'
 import rehypeMermaid from 'rehype-mermaid'
-
 import rehypeKatex from 'rehype-katex'
-import rehypeStringify from 'rehype-stringify'
+import toc from '@jsdevtools/rehype-toc'
 import rehypeSlug from 'rehype-slug'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypePrettyCode from 'rehype-pretty-code'
+
+import rehypeStringify from 'rehype-stringify'
 import { transformerCopyButton } from '@rehype-pretty/transformers'
 // import {
 //   transformerNotationDiff,
@@ -36,50 +39,60 @@ export function useBuildFile(mdText: string, options: { baseDir: string }): Prom
   if (cache.has(cacheKey)) {
     return cache.get(cacheKey)!
   }
+  //[remarkGithub, {
+  //  repository: 'user/project'
+  //  }],
+  const remarkPlugins: PluggableList = [
+    remarkGfm,
+    admonitions,
+    remarkMath,
+    gemoji,
+    remarkReferenceLinks
+  ]
+
+  const rehypePlugins: PluggableList = [
+    [rehypeImageAbsolutePath, { absolutePath: options.baseDir }],
+    rehypeSlug,
+    rehypeKatex,
+    rehypeMediumZoom,
+    rehypeMermaid,
+    [
+      rehypePrettyCode,
+      {
+        theme: {
+          dark: 'material-theme-darker',
+          light: 'material-theme-lighter'
+        },
+        keepBackground: false,
+
+        transformers: [
+          // TODO: 以下插件暂时无法使用，因为 shikijs 样式需要单独定义
+          // transformerNotationDiff(),
+          // transformerNotationHighlight(),
+          // transformerNotationWordHighlight(),
+          // transformerNotationFocus(),
+          // transformerNotationErrorLevel(),
+
+          transformerCopyButton({
+            visibility: 'hover',
+            feedbackDuration: 3_000
+          })
+        ]
+      }
+    ],
+    rehypeAutolinkHeadings,
+    [toc, { position: 'beforeend' }]
+  ]
 
   const processor = unified()
     .use(remarkParse)
-    .use(remarkGfm)
-    // .use(remarkGithub, {
-    //   repository: 'user/project'
-    // })
-    .use(remarkMath)
-    .use(gemoji)
-    .use(remarkRehype)
-
-    // .use(remarkTextr)
-    .use(rehypeImageAbsolutePath, { absolutePath: options.baseDir })
-    .use(remarkReferenceLinks)
-    .use(rehypeSlug)
-    .use(rehypeKatex)
-    .use(rehypeMediumZoom)
-    // 必须要放在 rehypeShiki\rehypePrettyCode 之前，否则会被因为之前插件渲染导致无法正确解析
-    .use(rehypeMermaid)
-    .use(rehypePrettyCode, {
-      theme: {
-        dark: 'material-theme-darker',
-        light: 'material-theme-lighter'
-      },
-      keepBackground: false,
-
-      transformers: [
-        // TODO: 以下插件暂时无法使用，因为 shikijs 样式需要单独定义
-        // transformerNotationDiff(),
-        // transformerNotationHighlight(),
-        // transformerNotationWordHighlight(),
-        // transformerNotationFocus(),
-        // transformerNotationErrorLevel(),
-
-        transformerCopyButton({
-          visibility: 'always',
-          feedbackDuration: 3_000
-        })
-      ]
+    .use(remarkPlugins)
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypePlugins)
+    .use(rehypeStringify, {
+      allowDangerousHtml: true,
+      closeSelfClosing: true
     })
-
-    .use(rehypeAutolinkHeadings)
-
-    .use(rehypeStringify)
 
   const promise = processor.process(mdText)
   cache.set(cacheKey, promise)

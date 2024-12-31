@@ -182,4 +182,32 @@ export class FileSystem {
 
     return filesNameArr
   }
+
+  static isDirectory(dirPath: string): boolean {
+    try {
+      return fs.existsSync(dirPath) && fs.lstatSync(dirPath).isDirectory()
+    } catch (_) {
+      return false
+    }
+  }
+
+  /**
+   * Normalize the path into an absolute path and resolves the link target if needed.
+   *
+   * @param {string} pathname The path or link path.
+   * @returns {string} Returns the absolute path and resolved link. If the link target
+   *                   cannot be resolved, an empty string is returned.
+   */
+  static normalizeAndResolvePath(pathname: string): string {
+    if (this.isSymbolicLink(pathname)) {
+      const absPath = path.dirname(pathname)
+      const targetPath = path.resolve(absPath, fs.readlinkSync(pathname))
+      if (this.isFile(targetPath) || this.isDirectory(targetPath)) {
+        return path.resolve(targetPath)
+      }
+      console.error(`Cannot resolve link target "${pathname}" (${targetPath}).`)
+      return ''
+    }
+    return path.resolve(pathname)
+  }
 }

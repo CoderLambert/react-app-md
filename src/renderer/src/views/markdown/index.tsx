@@ -15,6 +15,7 @@ import MDViewer from '@renderer/components/Markdown/Viewer'
 import { useMarkdownNoteStore } from '@renderer/store/useMarkdownNoteStore'
 
 import { IFileNode } from '@common/types/md'
+// import MarkdownRenderer from '@renderer/components/Markdown/ReactMD'
 
 export function MarkdownPage(): JSX.Element {
   const refs = useRef<{
@@ -66,10 +67,6 @@ export function MarkdownPage(): JSX.Element {
 
   const treeBoxRef = useRef<HTMLDivElement>(null)
   const [, setTreeBoxHeight] = useState(0)
-
-  // useEffect(() => {
-
-  // }, []) // 空依赖数组表示只在组件挂载时执行
 
   async function openDir(): Promise<void> {
     const selectDir = await window.electron.ipcRenderer.invoke(
