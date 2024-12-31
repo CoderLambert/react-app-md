@@ -4,12 +4,21 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   main: {
+    build: {
+      sourcemap: 'inline' // 开启渲染进程的 Source Map
+    },
     plugins: [externalizeDepsPlugin()]
   },
   preload: {
+    build: {
+      sourcemap: 'inline' // 开启渲染进程的 Source Map
+    },
     plugins: [externalizeDepsPlugin()]
   },
   renderer: {
+    build: {
+      sourcemap: 'inline' // 开启渲染进程的 Source Map
+    },
     resolve: {
       alias: {
         '@renderer': resolve('src/renderer/src'),
