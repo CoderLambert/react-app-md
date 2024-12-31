@@ -50,8 +50,8 @@ export default function MDViewer({
     return <div className="w-full flex justify-center items-center">Loading...</div>
   }
   return (
-    <div
-      className="markdown-body max-w-clamp mx-auto my-0 p-8 rounded-lg"
+    <article
+      className="markdown-body max-w-[1100px] mx-auto my-0 p-8 rounded-lg"
       dangerouslySetInnerHTML={{ __html: String(file) }}
     />
   )
