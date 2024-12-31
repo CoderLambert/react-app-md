@@ -5,6 +5,9 @@ import icon from '../../resources/icon.png?asset'
 import { registerDialogActions } from './ipcMain/dialogActions'
 import { registerDirActions } from './ipcMain/dirActions'
 import { registerFileActions } from './ipcMain/fileActions'
+
+import { installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer'
+
 class MainWindow {
   private mainWindow: BrowserWindow | null = null
 
@@ -69,11 +72,23 @@ class MainWindow {
       this.mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
     }
 
+    // 监听路由请求
+    // this.mainWindow.webContents.on('will-navigate', (event, url) => {
+    //   if (!url.startsWith('file://')) {
+    //     event.preventDefault()
+    //     this.mainWindow!.loadFile(join(__dirname, '../renderer/index.html'))
+    //   }
+    // })
+
     return this.mainWindow
   }
 
   private initializeApp(): void {
     app.whenReady().then(() => {
+      installExtension(REACT_DEVELOPER_TOOLS)
+        .then((ext) => console.log(`Added Extension:  ${ext.name}`))
+        .catch((err) => console.log('An error occurred: ', err))
+
       // Set app user model id for windows
       electronApp.setAppUserModelId('com.electron')
       this.createWindow()
