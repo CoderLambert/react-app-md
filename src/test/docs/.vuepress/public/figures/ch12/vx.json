@@ -1,0 +1,31 @@
+{
+    "created_time": "2024-12-25T07:19:06Z",
+    "files": [
+        {
+            "attachment_folder": "",
+            "created_time": "2024-12-25T07:19:06Z",
+            "id": "392",
+            "modified_time": "2024-12-25T07:19:06Z",
+            "name": "fg12-1.jpg",
+            "signature": "15011346309723173354",
+            "tags": [
+            ]
+        },
+        {
+            "attachment_folder": "",
+            "created_time": "2024-12-25T07:19:06Z",
+            "id": "393",
+            "modified_time": "2024-12-25T07:19:06Z",
+            "name": "fg12-2.jpg",
+            "signature": "7913517011717304810",
+            "tags": [
+            ]
+        }
+    ],
+    "folders": [
+    ],
+    "id": "391",
+    "modified_time": "2024-12-25T07:19:06Z",
+    "signature": "2921831287875154410",
+    "version": 3
+}

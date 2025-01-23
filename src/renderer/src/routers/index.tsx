@@ -3,6 +3,8 @@
 import { Route, Routes } from 'react-router-dom'
 import { MarkdownPage } from '@renderer/views/markdown/'
 import { DashBoardLayout } from '@renderer/components/layouts/DashBoardLayout'
+import DouBaoVision from '@renderer/views/doubao/index'
+import twMerge from '@renderer/views/twMerge'
 export const routeConfigs = [
   {
     path: '/',
@@ -16,10 +18,13 @@ export const routeConfigs = [
         path: '/markdown',
         element: <MarkdownPage></MarkdownPage>
       },
-
+      {
+        path: '/doubao-vision',
+        element: <DouBaoVision></DouBaoVision>
+      },
       {
         path: '/code',
-        element: <div>Code</div>
+        element: <>{twMerge()}</>
       }
     ]
   }

@@ -3,8 +3,6 @@ import fsPromises from 'fs/promises'
 
 import * as path from 'path'
 import * as fs from 'fs'
-// import fg from 'fast-glob'
-
 import { IFileNode } from '@common/types/md'
 
 export interface IGetAllDirOptions {
@@ -119,7 +117,6 @@ export class FileSystem {
 
     const filesNameArr: IFileNode[] = []
     const mapDeep: { [key: string]: number } = { [dir]: 0 }
-    console.log('options:', options)
     // 判断是否为隐藏文件或文件夹
     const isHidden = (file: string): boolean => file.startsWith('.')
 
@@ -130,7 +127,7 @@ export class FileSystem {
       return includeFileTypes?.includes(ext) || false
     }
 
-    // 使用 fast-glob 递归获取所有文件和目录
+    // // 使用 fast-glob 递归获取所有文件和目录
     // const files = fg.sync([`${dir}/**/*.md`], {
     //   dot: !excludeHidden, // 是否包含隐藏文件
     //   onlyFiles: false, // 包含文件和目录
@@ -138,8 +135,6 @@ export class FileSystem {
     //   stats: true // 获取文件状态信息
     // })
 
-    // console.log('glob files:', files)
-    // 递归读取目录结构
     const readDirs = (currentDir: string, folderName: string): IFileNode => {
       const result: IFileNode = {
         path: currentDir,

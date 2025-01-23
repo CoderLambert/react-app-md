@@ -1,0 +1,19 @@
+.message-list {
+  img {
+    width: 300px;
+    // margin: 20px auto;
+  }
+  .message {
+    // border-radius: 12px;
+    .item {
+      border-radius: 12px;
+      padding: 12px;
+    }
+    &.user {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: end;
+    }
+  }
+}

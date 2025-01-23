@@ -5,7 +5,7 @@ import icon from '../../resources/icon.png?asset'
 import { registerDialogActions } from './ipcMain/dialogActions'
 import { registerDirActions } from './ipcMain/dirActions'
 import { registerFileActions } from './ipcMain/fileActions'
-
+import './db/test'
 class MainWindow {
   private mainWindow: BrowserWindow | null = null
 
@@ -90,6 +90,40 @@ class MainWindow {
           this.mainWindow!.webContents.openDevTools()
         }
       })
+
+      globalShortcut.register('Alt+2', () => {
+        const zoomLevel = this.mainWindow!.webContents.getZoomLevel()
+        this.mainWindow!.webContents.setZoomLevel(zoomLevel + 0.3)
+      })
+      globalShortcut.register('Alt+3', () => {
+        const zoomLevel = this.mainWindow!.webContents.getZoomLevel()
+
+        this.mainWindow!.webContents.setZoomLevel(zoomLevel - 0.3)
+      })
+      // getPath('home')
+
+      // function getPath(
+      //   pathName:
+      //     | 'home'
+      //     | 'appData'
+      //     | 'userData'
+      //     | 'sessionData'
+      //     | 'temp'
+      //     | 'exe'
+      //     | 'module'
+      //     | 'desktop'
+      //     | 'documents'
+      //     | 'downloads'
+      //     | 'music'
+      //     | 'pictures'
+      //     | 'videos'
+      //     | 'recent'
+      //     | 'logs'
+      //     | 'crashDumps'
+      // ) {
+      //   const userData = app.getPath(pathName)
+      //   console.log(`userData ==> ${userData}`)
+      // }
 
       // Default open or close DevTools by F12 in development
       // and ignore CommandOrControl + R in production.

@@ -8,14 +8,18 @@ import {
 } from 'react-resizable-panels'
 
 import ResizeHandle from '@renderer/components/ResizeHandler'
+
 import type { TreeProps } from 'antd'
-import { transformedDirTreeInfo, DirTree } from '@renderer/components/Markdown/DirTree'
+import type { IFileNode } from '@common/types/md'
+
+import { transformedDirTreeInfo } from '@renderer/components/Markdown/DirTree'
 import MDViewer from '@renderer/components/Markdown/Viewer'
 
 import { useMarkdownNoteStore } from '@renderer/store/useMarkdownNoteStore'
 
-import { IFileNode } from '@common/types/md'
-// import MarkdownRenderer from '@renderer/components/Markdown/ReactMD'
+import { LeftSideBarPanelMenus } from '@renderer/components/layouts/LeftSideBarPanelMenus'
+import { MdTreePanel } from '@renderer/components/layouts/MdTreePanel'
+import { MdSearchPanel } from '@renderer/components/layouts/MdSearchPanel'
 
 export function MarkdownPage(): JSX.Element {
   const refs = useRef<{
@@ -33,13 +37,16 @@ export function MarkdownPage(): JSX.Element {
   const [showFirstPanel, setShowFirstPanel] = useState(true)
 
   const {
+    rootDirPath,
     setRootDirPath,
     dirTreeInfo,
     setDirTreeInfo,
     noteDirPath,
     setNoteDirPath,
     fileText,
-    setFileText
+    setFileText,
+    leftSideBarMenu,
+    setLeftSideBarMenu
   } = useMarkdownNoteStore()
 
   function toggleFirstPanel(): void {
@@ -74,7 +81,7 @@ export function MarkdownPage(): JSX.Element {
       'openDir',
       'markdown'
     )
-    updateTreeDirInfo(selectDir)
+    await updateTreeDirInfo(selectDir)
   }
 
   async function updateTreeDirInfo(selectDir: string): Promise<void> {
@@ -132,27 +139,24 @@ export function MarkdownPage(): JSX.Element {
             order={1}
           >
             <div className="left-side-bar flex flex-col h-full">
-              <div className="left-side-header gap-4 pt-4 px-2  w-full flex-col flex-center">
-                <button
-                  className="btn btn-outline btn-sm md:w-2/3 sm:w-full min-w-[100px]"
-                  onClick={openDir}
-                >
-                  打开文件夹
-                </button>
-                <button className="btn btn-outline btn-sm md:w-2/3 sm:w-full min-w-[100px]">
-                  打开文件
-                </button>
-              </div>
+              <LeftSideBarPanelMenus
+                menu={leftSideBarMenu}
+                onClick={setLeftSideBarMenu}
+              ></LeftSideBarPanelMenus>
 
-              <div
-                style={{ height: 'calc(100% - 100px)' }}
-                className="m-6 scrollbar-none overflow-scroll"
-                ref={treeBoxRef}
-              >
-                {dirTreeInfo.length > 0 && (
-                  <DirTree onSelect={onTreeNodeSelect} dirTreeInfo={dirTreeInfo} />
-                )}
-              </div>
+              {leftSideBarMenu === '文件夹' && (
+                // @ts-ignore
+                <MdTreePanel
+                  dirTreeInfo={dirTreeInfo}
+                  treeBoxRef={treeBoxRef}
+                  openDir={openDir}
+                  onTreeNodeSelect={onTreeNodeSelect}
+                >
+                  {' '}
+                </MdTreePanel>
+              )}
+
+              {leftSideBarMenu === '搜索' && <MdSearchPanel rootPath={rootDirPath}></MdSearchPanel>}
             </div>
           </Panel>
         </>

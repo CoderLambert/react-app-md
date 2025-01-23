@@ -11,7 +11,7 @@ import admonitions from 'remark-github-beta-blockquote-admonitions'
 // import remarkTextr from 'remark-textr'
 import rehypeMermaid from 'rehype-mermaid'
 import rehypeKatex from 'rehype-katex'
-import toc from '@jsdevtools/rehype-toc'
+// import toc from '@jsdevtools/rehype-toc'
 import rehypeSlug from 'rehype-slug'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypePrettyCode from 'rehype-pretty-code'
@@ -42,13 +42,7 @@ export function useBuildFile(mdText: string, options: { baseDir: string }): Prom
   //[remarkGithub, {
   //  repository: 'user/project'
   //  }],
-  const remarkPlugins: PluggableList = [
-    remarkGfm,
-    admonitions,
-    remarkMath,
-    gemoji,
-    remarkReferenceLinks
-  ]
+  const remarkPlugins: PluggableList = [remarkGfm, admonitions, gemoji, remarkReferenceLinks]
 
   const rehypePlugins: PluggableList = [
     [rehypeImageAbsolutePath, { absolutePath: options.baseDir }],
@@ -80,12 +74,17 @@ export function useBuildFile(mdText: string, options: { baseDir: string }): Prom
         ]
       }
     ],
-    rehypeAutolinkHeadings,
-    [toc, { position: 'beforeend' }]
+    rehypeAutolinkHeadings
+    // [toc, { position: 'beforeend' }]
   ]
 
   const processor = unified()
     .use(remarkParse)
+    .use(remarkMath, {
+      singleDollarTextMath: true,
+      inlineMathDoubleDollar: false,
+      blockMathSingleDollar: false
+    })
     .use(remarkPlugins)
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypePlugins)

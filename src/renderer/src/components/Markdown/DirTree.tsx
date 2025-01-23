@@ -2,7 +2,6 @@ import { FileImageTwoTone, FileMarkdownTwoTone, FolderOpenTwoTone } from '@ant-d
 import { IFileNode } from '@common/types/md'
 import { TreeDataNode, ConfigProvider, Tree, TreeProps } from 'antd'
 import { ReactNode } from 'react'
-import { MDFileRightMenu } from './MDFileRightMenu'
 
 const getIcon = (item: IFileNode): JSX.Element => {
   if (item.type === 'directory') {
@@ -41,7 +40,6 @@ export function DirTree({
 }): JSX.Element {
   return (
     <>
-      {height}
       {dirTreeInfo && (
         <ConfigProvider
           theme={{
@@ -66,12 +64,10 @@ export function DirTree({
               const icon = node.icon
 
               return (
-                <MDFileRightMenu>
-                  <div className="flex items-center" title={node.key as string}>
-                    {icon as ReactNode}
-                    <span className="ml-2">{title}</span>
-                  </div>
-                </MDFileRightMenu>
+                <div className="flex items-center" title={node.key as string}>
+                  {icon as ReactNode}
+                  <span className="ml-2">{title}</span>
+                </div>
               )
             }}
           />

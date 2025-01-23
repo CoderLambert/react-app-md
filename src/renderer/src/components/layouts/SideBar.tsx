@@ -1,4 +1,4 @@
-import { VscFile, VscFolder } from 'react-icons/vsc'
+import { VscFile, VscFolder, VscRobot } from 'react-icons/vsc'
 import SideBarMenu from './SideBarMenu'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -10,9 +10,9 @@ const SideBarMenuConfig = [
     icon: <VscFolder size={21} />
   },
   {
-    tip: '文件2',
-    path: '/markdown/2',
-    icon: <VscFolder size={21} />
+    tip: '豆包视觉',
+    path: '/doubao-vision',
+    icon: <VscRobot size={21} />
   },
   {
     tip: '代码片段',

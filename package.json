@@ -20,7 +20,8 @@
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
     "build:linux": "electron-vite build && electron-builder --linux",
-    "test": "vitest"
+    "test": "vitest",
+    "rebuild": "electron-rebuild -f -w better-sqlite3"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.2",
@@ -29,12 +30,17 @@
     "@jsdevtools/rehype-toc": "^3.0.2",
     "@rehype-pretty/transformers": "^0.13.2",
     "@shikijs/rehype": "^1.24.2",
+    "@vscode/ripgrep": "^1.15.9",
     "antd": "^5.22.5",
+    "better-sqlite3": "^11.7.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "electron-updater": "^6.1.7",
     "fast-glob": "^3.3.2",
     "fs": "0.0.1-security",
     "fs-extra": "^11.2.0",
     "github-markdown-css": "^5.8.1",
+    "immer": "^10.1.1",
     "marked": "^15.0.4",
     "medium-zoom": "^1.1.0",
     "path-browserify": "^1.0.1",
@@ -62,9 +68,12 @@
     "remark-reference-links": "^7.0.0",
     "remark-textr": "^6.1.0",
     "remark-toc": "^9.0.0",
+    "ripgrep-node": "^1.0.0",
     "shiki": "^1.24.2",
+    "tailwind-merge": "^2.6.0",
     "to-vfile": "^8.0.0",
     "unist-util-visit": "^5.0.0",
+    "uuid": "^11.0.5",
     "zustand": "^5.0.2"
   },
   "devDependencies": {
@@ -82,6 +91,7 @@
     "electron": "^31.0.2",
     "electron-builder": "^24.13.3",
     "electron-extension-installer": "^1.2.0",
+    "electron-rebuild": "^3.2.9",
     "electron-vite": "^2.3.0",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.3",

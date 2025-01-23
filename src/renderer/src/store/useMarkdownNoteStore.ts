@@ -16,6 +16,9 @@ interface IMarkdownNoteState {
 
   fileText: string
   setFileText: (fileText: string) => void
+
+  leftSideBarMenu: string
+  setLeftSideBarMenu: (leftSideBarMenu: string) => void
 }
 
 const useMarkdownNoteStore = create<IMarkdownNoteState>((set) => ({
@@ -37,7 +40,11 @@ const useMarkdownNoteStore = create<IMarkdownNoteState>((set) => ({
 
   // 当前 markdown 文件内容
   fileText: '',
-  setFileText: (fileText: string): void => set({ fileText })
+  setFileText: (fileText: string): void => set({ fileText }),
+
+  // LeftSideBarMenu
+  leftSideBarMenu: '文件夹',
+  setLeftSideBarMenu: (leftSideBarMenu: string): void => set({ leftSideBarMenu })
 }))
 
 export { useMarkdownNoteStore }
